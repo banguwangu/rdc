@@ -1,0 +1,50 @@
+<?php
+	require('app\templates\inc\header.phtml');
+?>
+
+<div class="container">
+	<form action="" class="login-form w-100 w-md-50 w-lg-25" method="POST">
+		<legend> Sign In to Our Platform</legend>
+		<div class="form-group mb-3">
+			<input placeholder="Username" name="username" type="text" class="form-control form-control-md <?= isset($this->errors['username']) ? 'is-invalid' : '' ?>">
+			<?php if(isset($this->errors['username'])): ?>
+				<div class="invalid-feedback">
+					<?=$this->errors['username']?>
+				</div>
+			<?php endif;?>
+		</div>
+		<div class="form-group mb-3">
+			<input placeholder="Password" type="password" name="password" class="form-control form-control-md <?= isset($this->errors['password']) ? 'is-invalid' : '' ?>">
+			<?php if(isset($this->errors['password'])): ?>
+				<div class="invalid-feedback">
+					<?=$this->errors['password']?>
+				</div>
+			<?php endif;?>
+		</div>
+		<div class="form-group mb-3">
+			<div class="row">
+				<div class="col-md-6">
+					<input type="checkbox" name="remember_me" id="remember_me" class="checkbox">
+					<label for="#remember_me">Remember Me</label>
+				</div>
+				<div class="col-md-6">
+					<a class="btn btn-link" href="">Forgot Password?</a>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<button class="btn btn-square btn-primary w-100" type="submit">Sign In</button>
+		</div>
+		<div class="form-group mt-2">
+			<div class="row align-items-center">
+				
+				<div class="col-6">
+					Dont have account?
+				</div>
+				<div class="col-6">
+					<a href="<?php echo $this->route->url_for('auth_register'); ?>" class="btn btn-link">Sign Up</a>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

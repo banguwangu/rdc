@@ -1,0 +1,132 @@
+<?php
+	namespace app\core;
+	use PDO;
+	class QDatabase{
+        public $session;
+        public $query;
+        private $SQLstmt;
+        private $model;
+        private $abstractor;
+        private $SQLargs;
+        public function __construct($dbName){
+
+            $dsn = "mysql:host=127.0.0.1;dbname=$dbName;port=3306;charset=utf8mb4";
+
+            $options = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ];
+            $this->abstractor = new PDO($dsn, 'root', '', $options);
+
+            $this->session = $this->abstractor;;
+
+        }
+        public function add($model){
+            $sqlStmt = "INSERT INTO `".$model->__tablename__."`(".$model->getColumns().") VALUES (".$model->getValuePlaceholders().")";
+            $stmt = $this->session->prepare($sqlStmt);
+            foreach($model->getColumnsList() as $key => $value){
+                $stmt->bindValue(':'.$key, $value);
+            }    
+            return $stmt;
+        }
+        public function commit($stmt){
+            $stmt->execute();
+        }
+        public function query($model){
+            $sqlStmt = "SELECT * FROM `".$model->__tablename__."`";
+            $this->SQLstmt = $sqlStmt;
+            $this->model = $model;
+            return $this;
+        }
+        public function all(){
+            if ($this->SQLargs == null){
+                $stmt =  $this->session->query($this->SQLstmt);
+            }else{
+                $stmt = $this->session->prepare($this->SQLstmt);
+                foreach($this->SQLargs as $key => $value){
+                    $stmt->bindValue(':'.$key, $value);
+                }
+                $stmt->execute();
+
+            }
+            $this->SQLstmt = null;
+            $model = $this->model;
+            try{
+                $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+                if(count($result) == 0){
+                    return null;
+                }
+                $results = [];
+                foreach($result as $i => $obj){
+                    $results[$i] = $model;
+                    foreach($obj as $key =>$value){
+                        $results[$i]->{$key} = $value;
+                    }
+                }
+                return $results;
+            }catch(\Exception $e){
+                return null;
+            }
+            
+        }
+        public function first(){
+            if ($this->SQLargs == null){
+                $stmt =  $this->session->query($this->SQLstmt." FIRST_VALUE");
+            }else{
+                $stmt = $this->session->prepare($this->SQLstmt);
+                foreach($this->SQLargs as $key => $value){
+                    $stmt->bindValue(':'.$key, $value);
+                }
+                $stmt->execute();
+
+            }
+            $this->SQLstmt = null;
+            $model = $this->model;
+            try{
+                $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+                if(count($result) == 0){
+                    return null;
+                }
+                foreach($result[0] as $key => $value){
+                    $model->{$key} = $value;
+                }
+                return $model;
+            }catch(\Exception $e){
+                return null;
+            }
+            
+        }
+        public function filter(...$args){
+            $this->SQLargs = $args;
+            foreach($args as $key => $value){
+                $this->SQLstmt .= " WHERE `".$key."` = :".$key;
+            }
+            return $this;
+        }
+        public function count(){
+            $sql = "SELECT COUNT(*) as Count from ($this->SQLstmt) AS SUBQUERY";
+            if ($this->SQLargs == null){
+                $stmt =  $this->session->query($sql);
+            }else{
+                $stmt = $this->session->prepare($sql);
+                foreach($this->SQLargs as $key => $value){
+                    $stmt->bindValue(':'.$key, $value);
+                }
+                $stmt->execute();
+
+            }
+            $this->SQLstmt = null;
+            $model = $this->model;
+            try{
+                $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+                return $result[0]->Count;
+            }catch(\Exception $e){
+                return null;
+            }
+            
+        }
+
+        
+    }

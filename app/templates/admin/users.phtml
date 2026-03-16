@@ -1,0 +1,48 @@
+<?php
+	require('app\templates\inc\header.phtml');
+?>
+<?php require('app\templates\admin\inc\navbar.phtml');?>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 col-sm-12">
+				
+			</div>
+			<div class="col-md-10 col-sm-12">
+				<h1 class="page-heading text-success">Pfura Rural District Council Administration</h1>
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<th>
+								<input type="checkbox" class="checkbox">
+							</th>
+							<th>Username</th>
+							<th>Status</th>
+							<th>Action</th>
+							<th></th>
+							<th></th>
+						</thead>
+						<tbody>
+							<?php foreach($this->users() as $user): ?>
+							    <tr>
+							    	<td>
+							    		<input type="checkbox" class="checkbox">
+							    	</td>
+							    	<td>
+							    		<?=$user->username?>
+							    	</td>
+							    	<td>
+							    		<?=$user->is_active?>
+							    	</td>
+							    	<td>
+							    		<a href="">X</a>
+							    	</td>
+							    	<td></td>
+							    </tr>
+
+						    <?php endforeach; ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div><!-- row -->
+	</div><!-- container-fluid -->
