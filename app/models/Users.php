@@ -20,12 +20,12 @@
         public string $password_hash;
         public string $__tablename__ = 'users';
         public function __construct($kwargs=null){
-            if(!$kwargs){
-                $this->username = "VARCHAR(200) ";
-                $this->email = " VARCHAR(60) UNIQUE ";
-                $this->password_hash = "VARCHAR(100) UNIQUE";
-                $this->is_active = "BOOLEAN DEFAULT FALSE ";
-            }else{
+            
+            $this->username = "VARCHAR(200) ";
+            $this->email = " VARCHAR(60) UNIQUE ";
+            $this->password_hash = "VARCHAR(100) UNIQUE";
+            $this->is_active = "BOOLEAN DEFAULT FALSE ";
+            if($kwargs){
                 foreach($kwargs as $key => $value){
                     $exclude = ["password"  ,"confirm_password"];
                     if(!in_array($key,$exclude)){

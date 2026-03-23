@@ -19,7 +19,7 @@
             return $stmt;
         }
         public function getColDefinitions(){
-            $attrs = $this->getColumnsList();
+            $attrs = $this->getDefs();
             $cols_stmt = '' ;
             $cols =  [];
             foreach (array_keys($attrs) as $key => $value) {
@@ -30,9 +30,9 @@
             return $cols_stmt;
         }
         public function getColumns(){
-            return "`".implode('`,`', array_keys($this->getColumnsList()))."`";
+            return "`".implode('`,`', array_keys($this->getDefs()))."`";
         }
-        public function getColumnsList(){
+        public function getDefs(){
             $list =  [];
             foreach (get_object_vars($this) as $key => $value) {
                 if($key != '__tablename__'){
@@ -42,11 +42,22 @@
             return $list;
         }
         public function getValues(){
-            return "'".implode("','", array_values($this->getColumnsList()))."'";
+            return "'".implode("','", array_values($this->getDefs()))."'";
         }
         public function getValuePlaceholders(){
-            return ":".implode(" , :", array_keys($this->getColumnsList()));
+            return ":".implode(" , :", array_keys($this->getDefs()));
         }
+        public function getColList(){
+            return array_keys($this->getDefs());
+        }
+        public function getUpdatePlaceholders(){
+            $cols = array_keys($this->getDefs());
+            $cols = array_map(function($col){
+                return ($col != "id") ? "`".$col."` = :".$col : ""; 
+            }, $cols);
+            return ltrim(implode(", ", $cols), ", ");
+        }
+
         public function query(){
             return $this;
         }

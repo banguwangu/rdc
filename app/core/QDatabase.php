@@ -25,7 +25,17 @@
         public function add($model){
             $sqlStmt = "INSERT INTO `".$model->__tablename__."`(".$model->getColumns().") VALUES (".$model->getValuePlaceholders().")";
             $stmt = $this->session->prepare($sqlStmt);
-            foreach($model->getColumnsList() as $key => $value){
+            foreach($model->getValues() as $key => $value){
+                $stmt->bindValue(':'.$key, $value);
+            }    
+            return $stmt;
+        }
+        public function update($model){
+            $sqlStmt = "UPDATE `".$model->__tablename__."` SET ".$model->getUpdatePlaceholders()." WHERE `id` = :id";
+            $stmt = $this->session->prepare($sqlStmt);
+            $values = $model->getValues();
+            $values['id'] = $model->id;
+            foreach($values  as $key => $value){
                 $stmt->bindValue(':'.$key, $value);
             }    
             return $stmt;

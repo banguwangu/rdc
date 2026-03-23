@@ -48,8 +48,44 @@
             return $this->get_template('admin/users');
         }
    }
-   
-
+   class UserCreate extends QController{
+        public $db;
+        public $model;
+        public function __construct(){
+        }
+        public function post($pk = null){
+            if($pk){
+                $user = $this->getUser($pk);
+                $user = new Users($this->route->form);
+                $stmt = $this->db->update($user);
+            }else{
+                $user = new Users($this->route->form);
+                $stmt = $this->db->add($user);
+            }
+            $this->db->commit($stmt);
+            return header("Location: /admin/users");
+        }
+        public function get($pk = null){
+            $this->user = $this->getUser($pk);
+            return $this->get_template('admin/users');
+        }
+        public function getUser($pk){
+            return  $this->user = $this->db->query(new Users)->filter(...$pk)->first();
+        }
+   }
+   class EntryAdmin extends QController{
+        public $db;
+        public $model;
+        public function __construct(){
+        }
+        public function entries(){
+            $entry = $this->db->query(new Entry);
+            return $entry->all();
+        }
+        public function get(){
+            return $this->get_template('admin/entries');
+        }
+   }
    class Home extends QController{
         public function __construct(){
             $model = new Events();
@@ -98,7 +134,9 @@
     $app->route->add('#^/admin/users$#', new UserAdmin, "admin_user", array(
                 'GET', 'POST'
             ));
-
+    $app->route->add('#^/admin/entries$#', new EntryAdmin, "admin_entry", array(
+                'GET', 'POST'
+            ));
     $app->route->add('#^/auth/login$#', new AuthLogin, "auth_login", array(
                 'GET', 'POST'
             ));

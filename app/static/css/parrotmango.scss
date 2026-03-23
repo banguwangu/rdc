@@ -35,13 +35,23 @@
 
 .admin-card {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: justify;
+    align-items: justify;
     height: 100%;
     width: 100%;
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 10px;
+    border: 2px solid #f5f5f5;
+
+    .admin-card-icon {
+        font-size: 2rem;
+        padding: 10px;
+    }
+
+    .admin-card-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
 }
