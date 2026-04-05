@@ -5,27 +5,37 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-2 col-sm-12">
-				
+				<?php require(str_replace("\\",sp, 'app\\templates\\admin\\inc\\sidebar.phtml'));?>
 			</div>
 			<div class="col-md-10 col-sm-12">
-				<h1 class="page-heading text-success">Pfura Rural District Council Administration</h1>
-				<div class="table-responsive">
+				<div class="row mt-2">
+					<div class="col-md-6">
+						<form action="<?=$this->route->url_for('admin_entry')?>" method="get">
+							<input type="search" name="query" id="search" placeholder="Search entries" class="form-control">
+						</form>
+					</div>
+					<div class="col-md-6">
+						<a href="<?=$this->route->url_for('admin_entry_create')?>" class="btn btn-primary"> <i class="bi bi-plus"></i> Create Entry</a>
+					</div>
+				</div>
+				<?php if($this->entries() != null): ?>
+				<div class="table-responsive mt-3">
 					<table class="table table-striped">
-						<thead>
+						<thead class="bg-primary text-white">
 							<th>
-								<input type="checkbox" class="checkbox">
+								<input type="checkbox" class="select_all checkbox">
 							</th>
 							<th>Title</th>
 							<th>Status</th>
 							<th>Created</th>
-							<th></th>
-							<th></th>
 						</thead>
 						<tbody>
-							<?php foreach($this->entries() as $entry): ?>
+							<?php
+								foreach($this->entries() as $entry): 
+							?>
 							    <tr>
 							    	<td>
-							    		<input type="checkbox" class="checkbox">
+							    		<input type="checkbox" class="checkbox item" value="<?=$entry->id?>">
 							    	</td>
 							    	<td>
 							    		<?=$entry->title?>
@@ -36,13 +46,20 @@
 							    	<td>
 							    		<?=date_format(new DateTime($entry->date_created), "F j, Y")?>
 							    	</td>
-							    	<td></td>
 							    </tr>
 
-						    <?php endforeach; ?>
+						    <?php 
+								endforeach;
+							?>
 						</tbody>
 					</table>
 				</div>
+				<?php else: ?>
+					<div class="alert alert-info">
+						No entries found
+					</div>
+				<?php endif; ?>
 			</div>
 		</div><!-- row -->
 	</div><!-- container-fluid -->
+<?php require('app\templates\inc\footer.phtml');?>

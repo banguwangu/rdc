@@ -78,18 +78,52 @@
         public $model;
         public function __construct(){
         }
-        public function entries(){
+        public function queryManager(){
             $entry = $this->db->query(new Entry);
+            if(isset($_GET['query'])){
+                $entry = $entry->filter(array('title' => $_GET['query']), 'LIKE');
+            }
             return $entry->all();
+        }
+        public function entries(){
+            
+            return $this->queryManager();
         }
         public function get(){
             return $this->get_template('admin/entries');
         }
    }
+   class EntryAdminCreate extends QController{
+        public $db;
+        public $model;
+        public function __construct(){
+        }
+        public function get($pk = null){
+           if(isset($pk)){
+                $this->entry = $this->db->query(new Entry)->filter(...$pk)->first();
+            }
+            return $this->get_template('admin/entry_create');
+        }
+        public function post($pk = null){
+            if($pk != null){
+                $entry = $this->getEntry($pk);
+                $entry = new Entry($this->route->form);
+                $stmt = $this->db->update($entry);
+            }else{
+                $entry = new Entry($this->route->form);
+                $stmt = $this->db->add($entry);
+            }
+            $this->db->commit($stmt);
+            return header("Location:{$this->route->url_for('admin_entry')}");
+        }
+        public function getEntry($pk){
+            return $this->db->query(new Entry)->filter(...$pk)->first();
+        }
+
+   }
    class Home extends QController{
         public function __construct(){
             $model = new Events();
-            $model->query()->fetchAll();
         }
         public function get(){
             return  $this->get_template('index');
@@ -98,7 +132,6 @@
    class Contact extends QController{
         public function __construct(){
             $model = new Events();
-            $model->query()->fetchAll();
         }
         public function get(){
             return  $this->get_template('index');
@@ -135,6 +168,9 @@
                 'GET', 'POST'
             ));
     $app->route->add('#^/admin/entries$#', new EntryAdmin, "admin_entry", array(
+                'GET', 'POST'
+            ));
+    $app->route->add('#^/admin/entry/create$#', new EntryAdminCreate, "admin_entry_create", array(
                 'GET', 'POST'
             ));
     $app->route->add('#^/auth/login$#', new AuthLogin, "auth_login", array(

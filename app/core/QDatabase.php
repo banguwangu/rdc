@@ -24,6 +24,7 @@
         }
         public function add($model){
             $sqlStmt = "INSERT INTO `".$model->__tablename__."`(".$model->getColumns().") VALUES (".$model->getValuePlaceholders().")";
+            print_r($sqlStmt);
             $stmt = $this->session->prepare($sqlStmt);
             foreach($model->getValues() as $key => $value){
                 $stmt->bindValue(':'.$key, $value);
@@ -61,18 +62,16 @@
 
             }
             $this->SQLstmt = null;
-            $model = $this->model;
+            $this->SQLargs = null;
             try{
-                $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 if(count($result) == 0){
                     return null;
                 }
                 $results = [];
                 foreach($result as $i => $obj){
-                    $results[$i] = $model;
-                    foreach($obj as $key =>$value){
-                        $results[$i]->{$key} = $value;
-                    }
+                    $model = get_class($this->model);
+                    $results[$i] = new $model($obj);
                 }
                 return $results;
             }catch(\Exception $e){
@@ -86,31 +85,34 @@
             }else{
                 $stmt = $this->session->prepare($this->SQLstmt);
                 foreach($this->SQLargs as $key => $value){
+                    if(isset($_GET['query'])){
+                        $value = "%{$value}%";
+                    }
                     $stmt->bindValue(':'.$key, $value);
                 }
                 $stmt->execute();
 
             }
             $this->SQLstmt = null;
-            $model = $this->model;
+            $this->SQLargs = null;
+            
             try{
-                $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 if(count($result) == 0){
                     return null;
+                }else{
+                    $model = get_class($this->model);
+                    return new $model($result[0]);
                 }
-                foreach($result[0] as $key => $value){
-                    $model->{$key} = $value;
-                }
-                return $model;
             }catch(\Exception $e){
                 return null;
             }
             
         }
-        public function filter(...$args){
+        public function filter($args, $operator = "="){
             $this->SQLargs = $args;
             foreach($args as $key => $value){
-                $this->SQLstmt .= " WHERE `".$key."` = :".$key;
+                $this->SQLstmt .= " WHERE `".$key."` {$operator} :".$key;
             }
             return $this;
         }

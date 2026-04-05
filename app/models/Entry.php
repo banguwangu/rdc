@@ -10,14 +10,20 @@
         public string $date_created;
         public string $__tablename__ = 'entries';
         public function __construct($kwargs = []){
-            $this->title = "VARCHAR(255 ";
-            $this->content = "TEXT ";
-            $this->is_published = " BOOLEAN DEFAULT FALSE  ";
-            $this->date_created = "DATETIME DEFAULT CURRENT_TIMESTAMP";
+                        
             parent::__construct();
 
-            foreach($kwargs as $key => $value){
-                $this->{$key} = $value;
+            if(isset($kwargs)){
+                foreach($kwargs as $key => $value){
+                    $this->{$key} = $value;
+                }
+            }else{
+                $this->title = "VARCHAR(255) ";
+                $this->content = "TEXT ";
+                $this->is_published = " BOOLEAN DEFAULT FALSE  ";
+                $this->date_created = "DATETIME DEFAULT CURRENT_TIMESTAMP";
             }
+
+            
         }
    }

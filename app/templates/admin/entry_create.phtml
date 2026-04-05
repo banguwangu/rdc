@@ -1,0 +1,29 @@
+<?php
+	require('app\templates\inc\header.phtml');
+?>
+<?php require('app\templates\admin\inc\navbar.phtml');?>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 col-sm-12">
+				<?php require(str_replace("\\",sp, 'app\\templates\\admin\\inc\\sidebar.phtml'));?>
+			</div>
+			<div class="col-md-10 col-sm-12">
+				<h1 class="page-heading text-success">Add Entry</h1>
+				<form action="<?=$this->route->url_for('admin_entry_create')?>" method="post">
+					<div class="form-group">
+						<label for="title">Title</label>
+						<input type="text" class="form-control" id="title" name="title">
+					</div>
+					<div class="form-group">
+						<label for="content">Content</label>
+						<textarea class="form-control" id="content" name="content"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="is_published">Is Published</label>
+						<input type="checkbox" class="checkbox is_published" name="is_published">
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div><!-- row -->
+	</div><!-- container-fluid -->

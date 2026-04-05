@@ -41,7 +41,7 @@
                 if(property_exists($route['view_func'], 'db')){
                     $route['view_func']->db = new QDatabase('rdc_app');
                 }
-                $route['view_func']->{$request['requestMethod']}($matches);
+                $route['view_func']->{$request['requestMethod']}($this->getParams($matches));
             }else{
                 http_response_code(405);
             }
@@ -55,7 +55,6 @@
                     $params[$key] = $value;
                 }
             }
-            strtolower(';;');
             return $params;
         }
 

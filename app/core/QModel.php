@@ -42,10 +42,22 @@
             return $list;
         }
         public function getValues(){
-            return "'".implode("','", array_values($this->getDefs()))."'";
+            $list =  [];
+            foreach (get_object_vars($this) as $key => $value) {
+                if($key != '__tablename__'){
+                    $list[$key] = $value;
+                }
+            }
+            return $list;
         }
         public function getValuePlaceholders(){
-            return ":".implode(" , :", array_keys($this->getDefs()));
+            $list = [];
+            foreach($this->getDefs() as $key => $value){
+                if($key != "__tablename__"){
+                    $list[$key] = " :" . $key;
+                }
+            }
+            return implode(", ", $list);
         }
         public function getColList(){
             return array_keys($this->getDefs());
@@ -56,15 +68,5 @@
                 return ($col != "id") ? "`".$col."` = :".$col : ""; 
             }, $cols);
             return ltrim(implode(", ", $cols), ", ");
-        }
-
-        public function query(){
-            return $this;
-        }
-        public function fetchAll(){
-
-        }
-        public function save(){
-
         }
    }

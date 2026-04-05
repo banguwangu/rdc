@@ -2,7 +2,19 @@
 
 	namespace app\core;
 	use app\core\QMiddleware;
-
+    class Form{
+        public function __construct(){
+            foreach($_POST as $key => $value){
+                $this->{$key} = $value;
+            }
+        }
+        public function __set(string $name, mixed $value){
+            $this->{$name} = $value;
+        }
+        public function __get(string $name){
+            return $this->{$name};
+        }
+    }
 	class QRouting{
 
         public $request = array();
@@ -22,7 +34,7 @@
             }
 
             if($this->request['requestMethod'] =="POST"){
-                $this->form = $_POST;
+                $this->form = new Form();
             }
         }
         public function processRequest(){
@@ -39,7 +51,10 @@
             );
         }
         public function url_for($endpoint){
-           $rawPattern = $this->urlparttens[$endpoint]['url'];
+            if(!isset($this->urlparttens[$endpoint])){
+                return "";
+            }
+            $rawPattern = $this->urlparttens[$endpoint]['url'];
             $cleanPath = str_replace(["#^", "$#", "\\"], "", $rawPattern);
 
             return DOMAIN . ltrim($cleanPath, '/');

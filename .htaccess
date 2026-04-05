@@ -1,4 +1,10 @@
+# Enable Rewrite Engine
 RewriteEngine On
+RewriteBase /rdc
+
+Options -Indexes
+
+# Redirect all requests to index.php if the file or directory doesn't exist
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
