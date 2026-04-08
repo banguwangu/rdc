@@ -32,7 +32,9 @@
 							    		<?=$user->is_active?>
 							    	</td>
 							    	<td>
-							    		<a href="">X</a>
+							    		<a href="">
+											<i class="bi bi-<?=($user->is_active == 1) ? 'check-circle' : 'x-circle'?>"></i>
+										</a>
 							    	</td>
 							    </tr>
 

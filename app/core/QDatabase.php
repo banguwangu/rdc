@@ -81,7 +81,7 @@
         }
         public function first(){
             if ($this->SQLargs == null){
-                $stmt =  $this->session->query($this->SQLstmt." FIRST_VALUE");
+                $stmt =  $this->session->query($this->SQLstmt);
             }else{
                 $stmt = $this->session->prepare($this->SQLstmt);
                 foreach($this->SQLargs as $key => $value){
@@ -93,6 +93,7 @@
                 $stmt->execute();
 
             }
+            
             $this->SQLstmt = null;
             $this->SQLargs = null;
             
@@ -109,11 +110,14 @@
             }
             
         }
-        public function filter($args, $operator = "="){
+        public function filter($args, $operator = "=", $logOperator = "AND"){
             $this->SQLargs = $args;
+            $this->SQLstmt .= " WHERE ";
+            $filter_list = [];
             foreach($args as $key => $value){
-                $this->SQLstmt .= " WHERE `".$key."` {$operator} :".$key;
+                $filter_list[] = "`".$key."` {$operator} :".$key;
             }
+            $this->SQLstmt .= implode(" {$logOperator} ", $filter_list);
             return $this;
         }
         public function count(){

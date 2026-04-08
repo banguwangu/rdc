@@ -2,6 +2,7 @@
 
 	namespace app\core;
 
+    use app\core\SessionManager;
 
 	class QMiddleware{
         public QRouting $route;
@@ -20,6 +21,7 @@
                 //print_r($uri);
                 if (preg_match($this->generatePattern($route['url']),$uri, $matches)) {
                     // Process middleware stack here
+                    
                     $this->hookInterceptor($route, $this->route->request, $matches);
                     $pageFound = true;
                     break;
@@ -37,11 +39,22 @@
                 method_exists($route['view_func'],$request['requestMethod']) &&
                 in_array($request['requestMethod'],$route['methods'])
             ){
+                $this->route->session = new SessionManager();
                 $route['view_func']-> route = $this->route;
                 if(property_exists($route['view_func'], 'db')){
                     $route['view_func']->db = new QDatabase('rdc_app');
                 }
-                $route['view_func']->{$request['requestMethod']}($this->getParams($matches));
+                if(property_exists($route['view_func'], 'authencation')){
+                    
+                    if(!$this->route->session->get('user') && $route['view_func']->authencation){
+                        http_response_code(403);
+                        echo "  403 Forbidden";
+                    }else{
+                        $route['view_func']->{$request['requestMethod']}($this->getParams($matches));
+                    }
+                }else{
+                    $route['view_func']->{$request['requestMethod']}($this->getParams($matches));
+                }
             }else{
                 http_response_code(405);
             }

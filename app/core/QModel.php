@@ -23,7 +23,9 @@
             $cols_stmt = '' ;
             $cols =  [];
             foreach (array_keys($attrs) as $key => $value) {
-                $cols[] = "`".$value."` ".$this->{$value};
+                if($key != "__tablename__"){
+                    $cols[] = "`".$value."` ".$value;
+                }
             }
             $cols_stmt .= implode(',', $cols);         
 

@@ -16,13 +16,14 @@
         }
         public function post(){
             if($this->route->request['requestMethod'] == "POST"){
-                $username = $this->route->form['username'];
-                $password = $this->route->form['password'];
-                $users = $this->db->query(new Users)->filter(...array('username' => $username))->first();
+                $username = htmlspecialchars($this->route->form->username);
+                $password = htmlspecialchars($this->route->form->password);
+                $users = $this->db->query(new Users)->filter(array('username' => $username, 'is_active' => 1))->first();
 
                 if ($users != null){
                     if($users->verify_password($password)){
                         echo "You have successfully Signed In ";
+                        $this->route->session->set('user', $users);
                         return $this->route->redirect($this->route->url_for('admin'));
                     }else{
                         $this->errors["password"] = "Password is incorrect ";

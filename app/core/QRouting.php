@@ -50,12 +50,19 @@
                 'methods'=>$methods,
             );
         }
-        public function url_for($endpoint){
+        public function url_for($endpoint, $args=[]){
             if(!isset($this->urlparttens[$endpoint])){
                 return "";
             }
             $rawPattern = $this->urlparttens[$endpoint]['url'];
             $cleanPath = str_replace(["#^", "$#", "\\"], "", $rawPattern);
+
+            if(!empty($args)){
+                foreach($args as $key => $value){
+                    $args["{{$key}}"] = $value;
+                }
+                $cleanPath = strtr($cleanPath, $args);
+            }
 
             return DOMAIN . ltrim($cleanPath, '/');
         }

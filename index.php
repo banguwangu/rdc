@@ -11,8 +11,11 @@
     use app\models\Users;
     use app\models\Entry;
 
-    use app\auth\AuthLogin;
-    use app\auth\AuthRegister;
+    use app\auth\{
+        AuthLogin,
+        AuthRegister, 
+        AuthLogout
+    };
 
    class Events extends QModel{
 
@@ -23,8 +26,8 @@
     class Admin extends QController{
         public $db;
         public function __construct(){
-
-            $model = new Users();
+            parent::__construct();
+            $this->authencation = true;
 
         }
         public function get(){
@@ -34,11 +37,17 @@
             $user = $this->db->query(new Users);
             return $user->count();
         }
+        public function entriesCount(){
+            $entry = $this->db->query(new Entry);
+            return $entry->count();
+        }
     }   
    class UserAdmin extends QController{
         public $db;
         public $model;
         public function __construct(){
+            parent::__construct();
+            $this->authencation = true;
         }
         public function users(){
             $user = $this->db->query(new Users);
@@ -99,8 +108,9 @@
         public function __construct(){
         }
         public function get($pk = null){
-           if(isset($pk)){
-                $this->entry = $this->db->query(new Entry)->filter(...$pk)->first();
+            print_r($pk);
+           if($pk != null){
+                $this->entry = $this->db->query(new Entry)->filter($pk)->first();
             }
             return $this->get_template('admin/entry_create');
         }
@@ -173,8 +183,15 @@
     $app->route->add('#^/admin/entry/create$#', new EntryAdminCreate, "admin_entry_create", array(
                 'GET', 'POST'
             ));
+    $app->route->add('#^/admin/entry/edit/{id}$#', new EntryAdminCreate, "admin_entry_edit", array(
+                'GET', 'POST'
+            ));
     $app->route->add('#^/auth/login$#', new AuthLogin, "auth_login", array(
                 'GET', 'POST'
+            ));
+    
+    $app->route->add('#^/auth/logout$#', new AuthLogout, "auth_logout", array(
+                'GET',
             ));
 
     $app->route->add('#^/auth/register$#', new AuthRegister, "auth_register", array(

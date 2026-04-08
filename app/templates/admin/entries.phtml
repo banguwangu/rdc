@@ -9,12 +9,20 @@
 			</div>
 			<div class="col-md-10 col-sm-12">
 				<div class="row mt-2">
+					<div class="col-md-2">
+						<select name="" id="" class=" dropdown select-menu">
+							<option value="" selected disabled>Select Action</option>
+							<option value="">Delete</option>
+							<option value="">Publish</option>
+							<option value="">Unpublish</option>
+						</select>
+					</div>
 					<div class="col-md-6">
 						<form action="<?=$this->route->url_for('admin_entry')?>" method="get">
 							<input type="search" name="query" id="search" placeholder="Search entries" class="form-control">
 						</form>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<a href="<?=$this->route->url_for('admin_entry_create')?>" class="btn btn-primary"> <i class="bi bi-plus"></i> Create Entry</a>
 					</div>
 				</div>
@@ -38,7 +46,7 @@
 							    		<input type="checkbox" class="checkbox item" value="<?=$entry->id?>">
 							    	</td>
 							    	<td>
-							    		<?=$entry->title?>
+							    		<a class="text-decoration-none" href="<?=$this->route->url_for("admin_entry_edit", ['id'=>$entry->id])?>"><?=$entry->title?></a>
 							    	</td>
 							    	<td>
 							    		<?=$entry->is_published?>

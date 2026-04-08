@@ -5,8 +5,9 @@
 
 	class QController{
         public $route;
+        public $authencation = false;
         public function __construct(){
-
+            
         }
         public function get_template($temp_name){
             return  require(BASE_DIR.sp.'rdc'.sp.'app'.sp.'templates'.sp.str_replace(['/','\\'],sp, $temp_name).'.phtml');
