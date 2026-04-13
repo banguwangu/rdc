@@ -1,0 +1,45 @@
+<?php
+	require('app\templates\inc\header.phtml');
+?>
+<?php require('app\templates\admin\inc\navbar.phtml');?>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 col-sm-12">
+				<?php require(str_replace("\\",sp, 'app\\templates\\admin\\inc\\sidebar.phtml'));?>
+			</div>
+			<div class="col-md-10 col-sm-12">
+				<h1 class="page-heading text-success"><?=isset($this->user)? 'Edit' : 'Add'?> User</h1>
+				<form action="<?=$this->route->url_for('admin_user_create')?>" method="post">
+					<div class="form-group">
+						<label for="username">Username</label>
+						<input type="text" class="form-control" id="username" name="username" value = "<?=isset($this->user)? $this->user->username:'';?>">
+					</div>
+					<div class="form-group">
+						<label for="email">Email</label>
+						<input type="email" class="form-control" id="email" name="email" value = "<?=isset($this->user)? $this->user->email:'';?>">
+					</div>
+					<div class="form-group">
+						<label for="password">Password</label>
+						<input type="password" class="form-control" id="password" name="password" value = "<?=isset($this->user)? $this->user->password:'';?>">
+					</div>
+					<div class="form-group">
+						<label for="confirm_password">Confirm Password</label>
+						<input type="password" class="form-control" id="confirm_password" name="confirm_password" value = "<?=isset($this->user)? $this->user->confirm_password:'';?>">
+					</div>
+					<div class="form-group">
+						<label for="is_active">Is Active</label>
+						<input type="checkbox" class="checkbox is_active" name="is_active" <?=isset($this->user)? $this->user->is_active == 1 ? 'checked' : '':'';?>>
+					</div>
+                    <div class="form-group">
+						<label for="is_admin">Is Admin</label>
+						<input type="checkbox" class="checkbox is_admin" name="is_admin" <?=isset($this->user)? $this->user->is_admin == 1 ? 'checked' : '':'';?>>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary">Save </button>
+						<button type="reset" class="btn btn-danger">Save & Continue </button>
+						<button type="button" class="btn btn-secondary">Cancel</button>
+					</div>
+				</form>
+			</div>
+		</div><!-- row -->
+	</div><!-- container-fluid -->

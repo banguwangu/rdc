@@ -17,6 +17,22 @@
         AuthLogout
     };
 
+    use app\admin\entry\{
+        EntryAdmin,
+        EntryAdminDelete,
+        EntryAdminCreate
+    };
+    use app\admin\comment\{
+        CommentAdmin,
+        CommentAdminDelete,
+        CommentAdminCreate
+    };
+    use app\admin\user\{
+        UserAdmin,
+        UserCreate,
+        UserAdminDelete
+    };
+
    class Events extends QModel{
 
    }
@@ -42,95 +58,7 @@
             return $entry->count();
         }
     }   
-   class UserAdmin extends QController{
-        public $db;
-        public $model;
-        public function __construct(){
-            parent::__construct();
-            $this->authencation = true;
-        }
-        public function users(){
-            $user = $this->db->query(new Users);
-            return $user->all();
-        }
-        public function get(){
-            return $this->get_template('admin/users');
-        }
-   }
-   class UserCreate extends QController{
-        public $db;
-        public $model;
-        public function __construct(){
-        }
-        public function post($pk = null){
-            if($pk){
-                $user = $this->getUser($pk);
-                $user = new Users($this->route->form);
-                $stmt = $this->db->update($user);
-            }else{
-                $user = new Users($this->route->form);
-                $stmt = $this->db->add($user);
-            }
-            $this->db->commit($stmt);
-            return header("Location: /admin/users");
-        }
-        public function get($pk = null){
-            $this->user = $this->getUser($pk);
-            return $this->get_template('admin/users');
-        }
-        public function getUser($pk){
-            return  $this->user = $this->db->query(new Users)->filter(...$pk)->first();
-        }
-   }
-   class EntryAdmin extends QController{
-        public $db;
-        public $model;
-        public function __construct(){
-        }
-        public function queryManager(){
-            $entry = $this->db->query(new Entry);
-            if(isset($_GET['query'])){
-                $entry = $entry->filter(array('title' => $_GET['query']), 'LIKE');
-            }
-            return $entry->all();
-        }
-        public function entries(){
-            
-            return $this->queryManager();
-        }
-        public function get(){
-            return $this->get_template('admin/entries');
-        }
-   }
-   class EntryAdminCreate extends QController{
-        public $db;
-        public $model;
-        public function __construct(){
-        }
-        public function get($pk = null){
-            print_r($pk);
-           if($pk != null){
-                $this->entry = $this->db->query(new Entry)->filter($pk)->first();
-            }
-            return $this->get_template('admin/entry_create');
-        }
-        public function post($pk = null){
-            if($pk != null){
-                $entry = $this->getEntry($pk);
-                $entry = new Entry($this->route->form);
-                $stmt = $this->db->update($entry);
-            }else{
-                $entry = new Entry($this->route->form);
-                $stmt = $this->db->add($entry);
-            }
-            $this->db->commit($stmt);
-            return header("Location:{$this->route->url_for('admin_entry')}");
-        }
-        public function getEntry($pk){
-            return $this->db->query(new Entry)->filter(...$pk)->first();
-        }
-
-   }
+   
    class Home extends QController{
         public function __construct(){
             $model = new Events();
@@ -177,6 +105,15 @@
     $app->route->add('#^/admin/users$#', new UserAdmin, "admin_user", array(
                 'GET', 'POST'
             ));
+    $app->route->add('#^/admin/user/create$#', new UserCreate, "admin_user_create", array(
+                'GET', 'POST'
+            ));
+    $app->route->add('#^/admin/user/edit/{id}$#', new UserCreate, "admin_user_edit", array(
+                'GET', 'POST'
+            ));
+    $app->route->add('#^/admin/user/delete/{id}$#', new UserAdminDelete, "admin_user_delete", array(
+                'GET', 'POST'
+            ));
     $app->route->add('#^/admin/entries$#', new EntryAdmin, "admin_entry", array(
                 'GET', 'POST'
             ));
@@ -184,6 +121,22 @@
                 'GET', 'POST'
             ));
     $app->route->add('#^/admin/entry/edit/{id}$#', new EntryAdminCreate, "admin_entry_edit", array(
+                'GET', 'POST'
+            ));
+    $app->route->add('#^/admin/entry/delete/{id}$#', new EntryAdminDelete, "admin_entry_delete", array(
+                'GET', 'POST'
+            ));
+    //comments routes injections
+    $app->route->add('#^/admin/comments$#', new CommentAdmin, "admin_comment", array(
+                'GET', 'POST'
+            ));
+    $app->route->add('#^/admin/comment/create$#', new CommentAdminCreate, "admin_comment_create", array(
+                'GET', 'POST'
+            ));
+    $app->route->add('#^/admin/comment/edit/{id}$#', new CommentAdminCreate, "admin_comment_edit", array(
+                'GET', 'POST'
+            ));
+    $app->route->add('#^/admin/comment/delete/{id}$#', new CommentAdminDelete, "admin_comment_delete", array(
                 'GET', 'POST'
             ));
     $app->route->add('#^/auth/login$#', new AuthLogin, "auth_login", array(

@@ -8,21 +8,21 @@
 				<?php require(str_replace("\\",sp, 'app\\templates\\admin\\inc\\sidebar.phtml'));?>
 			</div>
 			<div class="col-md-10 col-sm-12">
-				<h1 class="page-heading text-success"><?=isset($this->entry)? 'Edit' : 'Add'?> Entry</h1>
-				<form action="<?=$this->route->url_for('admin_entry_create')?>" method="post">
+				<h1 class="page-heading text-success"><?=isset($this->comment)? 'Edit' : 'Add'?> Comment</h1>
+				<form action="<?=$this->route->url_for('admin_comment_create')?>" method="post">
 					<div class="form-group">
-						<label for="title">Title</label>
-						<input type="text" class="form-control" id="title" name="title" value = "<?=isset($this->entry)? $this->entry->title:'';?>">
+						<label for="content">Content</label>
+						<input type="text" class="form-control" id="content" name="content" value = "<?=isset($this->comment)? $this->comment->content:'';?>">
 					</div>
 					<div class="form-group">
 						<label for="content">Content</label>
 						<textarea class="form-control" id="content" name="content">
-							<?=isset($this->entry)? $this->entry->content:'';?>
+							<?=isset($this->comment)? $this->comment->content:'';?>
 						</textarea>
 					</div>
 					<div class="form-group">
 						<label for="is_published">Is Published</label>
-						<input type="checkbox" class="checkbox is_published" name="is_published" <?=isset($this->entry)? $this->entry->is_published == 1 ? 'checked' : '':'';?>>
+						<input type="checkbox" class="checkbox is_published" name="is_published" <?=isset($this->comment)? $this->comment->is_published == 1 ? 'checked' : '':'';?>>
 					</div>
 					<div class="form-group">
 							<button type="submit" class="btn btn-primary">Save </button>

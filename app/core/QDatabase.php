@@ -1,6 +1,9 @@
 <?php
+
 	namespace app\core;
 	use PDO;
+    use PDOException;
+
 	class QDatabase{
         public $session;
         public $query;
@@ -41,8 +44,14 @@
             }    
             return $stmt;
         }
+        public function delete($model){
+            $sqlStmt = "DELETE FROM `".$model->__tablename__."` WHERE `id` = :id";
+            $stmt = $this->session->prepare($sqlStmt);
+            $stmt->bindValue(':id', $model->id);
+            return $this->commit($stmt);
+        }
         public function commit($stmt){
-            $stmt->execute();
+            return $stmt->execute();
         }
         public function query($model){
             $sqlStmt = "SELECT * FROM `".$model->__tablename__."`";
@@ -51,6 +60,21 @@
             return $this;
         }
         public function all(){
+            try{
+                $table = $this->model->__tablename__;
+                $table_exists = $this->session->query("SELECT 1 FROM {$table} WHERE 1");
+                
+                if($table_exists){
+                    echo "Table {$table} does not exist";
+                    return null;
+                }
+            }catch(PDOException){
+                $stmt = $this->model->createTable();
+                $stmt = $this->session->prepare($stmt);
+                $this->commit($stmt);
+                return null;
+            }
+            
             if ($this->SQLargs == null){
                 $stmt =  $this->session->query($this->SQLstmt);
             }else{
@@ -71,7 +95,11 @@
                 $results = [];
                 foreach($result as $i => $obj){
                     $model = get_class($this->model);
-                    $results[$i] = new $model($obj);
+                    
+                    $model  = new $model($obj);
+                    $model->db = $this;
+                    $results[$i] = $model;
+
                 }
                 return $results;
             }catch(\Exception $e){
@@ -80,6 +108,7 @@
             
         }
         public function first(){
+            
             if ($this->SQLargs == null){
                 $stmt =  $this->session->query($this->SQLstmt);
             }else{

@@ -3,13 +3,14 @@
 	namespace app\models;
 	use app\core\QModel;
 
-	class Entry extends QModel{
+	class Comment extends QModel{
         
-        public string $title = "VARCHAR(255) ";
         public string $content = "TEXT ";
         public string $is_published = " BOOLEAN DEFAULT FALSE  ";
         public string $date_created = "DATETIME DEFAULT CURRENT_TIMESTAMP";
-        public string $__tablename__ = 'entries';
+        public string $user_id = " INT(11)";
+        public string $post_id = "  INT(11)";
+        public string $__tablename__ = 'comments';
 
         public function __construct($kwargs = []){
 
@@ -19,7 +20,12 @@
                 }
             }            
         }
-        
+        public function foreign_keys(){
+            return "
+                FOREIGN KEY(`user_id`) REFERENCES `users`(`id`),
+                FOREIGN KEY(`post_id`) REFERENCES `entries`(`id`) 
+            ";
+        }
         public function __get($name){
             if($name == "user"){
                 $user = $this->db->query(new Users)->filter(["id"=>$this->user_id])->first();

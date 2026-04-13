@@ -2,7 +2,8 @@
 RewriteEngine On
 RewriteBase /rdc
 
-Options -Indexes
+Options +FollowSymLinks -Indexes
+
 
 # Redirect all requests to index.php if the file or directory doesn't exist
 RewriteCond %{REQUEST_FILENAME} !-f

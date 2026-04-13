@@ -14,17 +14,13 @@
     }
 	class Users extends QModel{
         use UserMixin;
-        public string $username;
-        public string $email;
-        public string $is_active;
-        public string $password_hash;
+        public string $username = "VARCHAR(200) ";
+        public string $email = " VARCHAR(60) UNIQUE ";
+        public string $is_active = "BOOLEAN DEFAULT FALSE ";
+        public string $password_hash = "VARCHAR(100) UNIQUE";
         public string $__tablename__ = 'users';
         public function __construct($kwargs=null){
-            
-            $this->username = "VARCHAR(200) ";
-            $this->email = " VARCHAR(60) UNIQUE ";
-            $this->password_hash = "VARCHAR(100) UNIQUE";
-            $this->is_active = "BOOLEAN DEFAULT FALSE ";
+
             if($kwargs){
                 foreach($kwargs as $key => $value){
                     $exclude = ["password"  ,"confirm_password"];
@@ -36,7 +32,6 @@
                 }
 
             }
-            parent::__construct();
 
 
         }

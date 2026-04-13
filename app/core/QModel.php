@@ -5,26 +5,32 @@
     use app\core\QDatabase;
 
 	abstract class QModel{
-        public string $id;
-        public function __construct(){
-
-            $this->id = " INT(11) PRIMARY KEY AUTO_INCREMENT ";
+        public string $id = " INT(11) PRIMARY KEY AUTO_INCREMENT ";
+        
+        public function __set($name, $value){
+            if($name == "db"){
+                $this->{$name} = $value;
+            }
         }
         public function createTable(){
             $stmt = "
-                CREATE TABLE IF NOT EXISTS `".strtolower($this->__tablename__)."`(
-                    ".$this->getColDefinitions()."
+                CREATE TABLE IF NOT EXISTS `".$this->__tablename__."`(
+                    {$this->getColDefinitions()},
+                    {$this->foreign_keys()}
                 )
             ";
             return $stmt;
+        }
+        public function foreign_keys(){
+            return;
         }
         public function getColDefinitions(){
             $attrs = $this->getDefs();
             $cols_stmt = '' ;
             $cols =  [];
-            foreach (array_keys($attrs) as $key => $value) {
+            foreach ($attrs as $key => $value) {
                 if($key != "__tablename__"){
-                    $cols[] = "`".$value."` ".$value;
+                    $cols[] = "`".$key."` ".$value;
                 }
             }
             $cols_stmt .= implode(',', $cols);         
