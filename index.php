@@ -10,6 +10,7 @@
     };
     use app\models\Users;
     use app\models\Entry;
+    use app\models\Comment;
 
     use app\auth\{
         AuthLogin,
@@ -56,6 +57,10 @@
         public function entriesCount(){
             $entry = $this->db->query(new Entry);
             return $entry->count();
+        }
+        public function commentsCount(){
+            $comment = $this->db->query(new Comment);
+            return $comment->count();
         }
     }   
    

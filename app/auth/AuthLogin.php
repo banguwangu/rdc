@@ -30,7 +30,7 @@
                         
                     }
                 }else{
-                    $this->errors["username"] =  "Invalid Credentials ";
+                    $this->errors["username"] =  "User ID not found ";
                 }
                 return $this->get_template('auth/login');
             }

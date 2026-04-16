@@ -63,11 +63,6 @@
             try{
                 $table = $this->model->__tablename__;
                 $table_exists = $this->session->query("SELECT 1 FROM {$table} WHERE 1");
-                
-                if($table_exists){
-                    echo "Table {$table} does not exist";
-                    return null;
-                }
             }catch(PDOException){
                 $stmt = $this->model->createTable();
                 $stmt = $this->session->prepare($stmt);
@@ -98,6 +93,7 @@
                     
                     $model  = new $model($obj);
                     $model->db = $this;
+                    
                     $results[$i] = $model;
 
                 }

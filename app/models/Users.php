@@ -17,6 +17,7 @@
         public string $username = "VARCHAR(200) ";
         public string $email = " VARCHAR(60) UNIQUE ";
         public string $is_active = "BOOLEAN DEFAULT FALSE ";
+        public string $is_admin = "BOOLEAN DEFAULT FALSE ";
         public string $password_hash = "VARCHAR(100) UNIQUE";
         public string $__tablename__ = 'users';
         public function __construct($kwargs=null){
@@ -32,7 +33,10 @@
                 }
 
             }
-
-
+        }
+        public function __get($name){
+            if($name == "password"){
+                return $this->password_hash;
+            }
         }
    }

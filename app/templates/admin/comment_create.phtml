@@ -12,14 +12,18 @@
 				<form action="<?=$this->route->url_for('admin_comment_create')?>" method="post">
 					<div class="form-group">
 						<label for="content">Content</label>
-						<input type="text" class="form-control" id="content" name="content" value = "<?=isset($this->comment)? $this->comment->content:'';?>">
-					</div>
-					<div class="form-group">
-						<label for="content">Content</label>
 						<textarea class="form-control" id="content" name="content">
 							<?=isset($this->comment)? $this->comment->content:'';?>
 						</textarea>
 					</div>
+                    <div class="form-group">
+                        <label for="post_id">Post</label>
+                        <select class="form-control" id="post_id" name="post_id">
+                            <?php foreach($this->posts() as $post):?>
+                                <option value="<?=$post->id?>" ><?=$post->title?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
 					<div class="form-group">
 						<label for="is_published">Is Published</label>
 						<input type="checkbox" class="checkbox is_published" name="is_published" <?=isset($this->comment)? $this->comment->is_published == 1 ? 'checked' : '':'';?>>

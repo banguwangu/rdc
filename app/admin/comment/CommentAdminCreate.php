@@ -1,7 +1,11 @@
 <?php
     namespace app\admin\comment;
     use app\core\QController;
-    use app\models\Comment;
+    use app\models\{
+        Comment,
+        Entry,
+        Users
+    };
     
     class CommentAdminCreate extends QController{
         public $db;
@@ -25,6 +29,12 @@
             }
             $this->db->commit($stmt);
             return header("Location:{$this->route->url_for('admin_comment')}");
+        }
+        public function posts(){
+            return $this->db->query(new Entry)->all();
+        }
+        public function users(){
+            return $this->db->query(new Users)->all();
         }
         public function getComment($pk){
             return $this->db->query(new Comment)->filter($pk)->first();

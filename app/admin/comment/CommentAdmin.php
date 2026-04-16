@@ -1,7 +1,10 @@
 <?php
 	namespace app\admin\comment;
 	use app\core\QController;
-	use app\models\Comment;
+	use app\models\{
+        Comment,
+        Entry
+    };
 
 	class CommentAdmin extends QController{
         public $db;
@@ -14,6 +17,9 @@
                 $comment = $comment->filter(['content' => $_GET['query']], 'LIKE');
             }
             return $comment->all();
+        }
+        public function posts(){
+            return $this->db->query(new Entry)->all();
         }
         public function comments(){
             

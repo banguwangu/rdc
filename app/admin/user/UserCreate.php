@@ -27,6 +27,6 @@
             return header("Location:{$this->route->url_for('admin_user')}");
         }
         public function getUser($pk){
-            return $this->db->query(new Users)->filter(...$pk)->first();
+            return $this->db->query(new Users)->filter($pk)->first();
         }
    }

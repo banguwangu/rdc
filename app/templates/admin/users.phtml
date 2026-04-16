@@ -44,7 +44,9 @@
 											<input type="checkbox" class="checkbox">
 										</td>
 										<td>
-											<?=$user->username?>
+											<a href="<?=$this->route->url_for("admin_user_edit", ['id'=>$user->id])?>">
+												<?=$user->username?>
+								            </a>
 										</td>
 										<td>
 											<?=$user->email?>

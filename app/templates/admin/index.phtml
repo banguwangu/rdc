@@ -10,7 +10,7 @@
 			</div>
 			<div class="col-md-10 col-sm-12">
 				<h1 class="page-heading text-success">Pfura Rural District Council Administration</h1>
-				<div class="row stat-section">
+				<div class="row stat-section gap-1">
 					<div class="col-md-3 col-sm-12">
 						<div class="admin-card">
 							<div class="admin-card-icon">
@@ -37,6 +37,21 @@
 								<div class="admin-card-header">Entries</div>
 								<div class="admin-card-body">
 									<?=$this->entriesCount();?>
+								</div>
+								<div class="admin-card-footer">
+								</div>
+							</div>
+						</div><!-- card -->
+					</div>
+					<div class="col-md-3 col-sm-12">
+						<div class="admin-card">
+							<div class="admin-card-icon">
+								<i class="bi bi-files"></i>
+							</div>
+							<div class="admin-card-content">
+								<div class="admin-card-header">Comments</div>
+								<div class="admin-card-body">
+									<?=$this->commentsCount();?>
 								</div>
 								<div class="admin-card-footer">
 								</div>
